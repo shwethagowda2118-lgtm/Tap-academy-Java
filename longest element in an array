@@ -1,0 +1,38 @@
+class Solution {
+    public String longestPalindrome(String s) {
+        if (s == null || s.length() <= 1) {
+            return s;
+        }
+
+        int start = 0;
+        int maxLen = 1;
+
+        for (int i = 0; i < s.length(); i++) {
+            // Odd-length palindrome centered at i
+            int[] odd = expandAroundCenter(s, i, i);
+            int oddLen = odd[1] - odd[0] + 1;
+            if (oddLen > maxLen) {
+                start = odd[0];
+                maxLen = oddLen;
+            }
+
+            // Even-length palindrome centered between i and i + 1
+            int[] even = expandAroundCenter(s, i, i + 1);
+            int evenLen = even[1] - even[0] + 1;
+            if (evenLen > maxLen) {
+                start = even[0];
+                maxLen = evenLen;
+            }
+        }
+
+        return s.substring(start, start + maxLen);
+    }
+
+    private int[] expandAroundCenter(String s, int left, int right) {
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
+        }
+        return new int[] { left + 1, right - 1 };
+    }
+}
